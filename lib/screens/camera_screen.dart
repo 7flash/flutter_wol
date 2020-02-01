@@ -1,8 +1,14 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wol/widgets/main_text_field.dart';
+import 'package:path/path.dart' as pathUtils;
+import 'package:uuid/uuid.dart';
+import 'package:image/image.dart' as img;
+
+import 'package:firebase_storage/firebase_storage.dart';
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -10,8 +16,10 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  final controller = TextEditingController();
+  final titleController = TextEditingController();
   File _image;
+
+  bool _loading = false;
 
   @override
   void initState() {
@@ -30,10 +38,21 @@ class _CameraScreenState extends State<CameraScreen> {
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 12.0),
-            child: IconButton(
-              icon: Icon(Icons.send),
-              onPressed: () => Navigator.of(context).maybePop(),
-            ),
+            child: _loading == false
+                ? IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: () async {
+                      setState(() {
+                        _loading = true;
+                      });
+                      await _publishActivity();
+                      setState(() {
+                        _loading = false;
+                      });
+                      Navigator.of(context).maybePop();
+                    },
+                  )
+                : CircularProgressIndicator(),
           )
         ],
       ),
@@ -43,7 +62,7 @@ class _CameraScreenState extends State<CameraScreen> {
           children: <Widget>[
             MainTextField(
               labelText: "Activity Title",
-              controller: controller,
+              controller: titleController,
             ),
             SizedBox(height: 7),
             _image != null ? Image.file(_image) : Container(),
@@ -54,47 +73,33 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future _getImageFromCamera() async {
-    print("get image from camera");
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    print("done1");
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+    // var resizedImage = img.copyResize(img.decodeImage(imageFile.readAsBytesSync()), height: 250);
+    // var resizedFile = File("temp")..writeAsBytesSync(img.encodePng(resizedImage));
     setState(() {
-      _image = image;
+      _image = imageFile;
     });
-    print("done2");
-    // Navigator.of(context).maybePop();
   }
 
-  // void _saveProfile(ProfileModel profile) async {
-  //   savingLoader.currentState.loading();
-  //   var attachmentUrl;
-  //   if(_profileImage != null) {
-  //     attachmentUrl = await _uploadFile(profile);
-  //   }
-  //   await Provider.of<EosService>(context, listen: false).updateProfile(
-  //     nickname: _nameController.text ?? (profile.nickname ?? ''),
-  //     image: attachmentUrl ?? (profile.image ?? ''),
-  //     story: '',
-  //     roles: '',
-  //     skills:'',
-  //     interests: '',
-  //   );
-  //   savingLoader.currentState.done();
-  // }
+  Future _publishActivity() async {
+    String extensionName = pathUtils.extension(_image.path);
+    String path = "activities/${Uuid().v4()}.$extensionName";
+    String fileType =
+        extensionName.isNotEmpty ? extensionName.substring(1) : '*';
 
-  // _uploadFile(ProfileModel profile) async {
-  //   String extensionName = pathUtils.extension(_profileImage.path);
-  //   String path = "ProfileImage/" +
-  //       profile.account +
-  //       '/' +
-  //       Uuid().v4() +
-  //       extensionName;
-  //   StorageReference storageReference =
-  //   FirebaseStorage.instance.ref().child(path);
-  //   String fileType =
-  //   extensionName.isNotEmpty ? extensionName.substring(1) : '*';
-  //   var uploadTask = storageReference.putFile(
-  //       _profileImage, StorageMetadata(contentType: "image/$fileType"));
-  //   await uploadTask.onComplete;
-  //   return await storageReference.getDownloadURL();
-  // }
+    var ref = FirebaseStorage.instance.ref().child(path);
+
+    var uploadTask = ref.putFile(
+      _image,
+      StorageMetadata(contentType: "image/$fileType"),
+    );
+
+    String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
+
+    await Firestore.instance.collection("activities").add({
+      "title": titleController.text,
+      "image": imageURL,
+      "timestamp": Timestamp.now(),
+    });
+  }
 }

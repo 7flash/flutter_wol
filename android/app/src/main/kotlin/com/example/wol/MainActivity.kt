@@ -1,4 +1,4 @@
-package com.example.wol
+package earth.hypha.wolapp
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

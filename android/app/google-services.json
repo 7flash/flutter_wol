@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "1048759259541",
+    "firebase_url": "https://wol-777.firebaseio.com",
+    "project_id": "wol-777",
+    "storage_bucket": "wol-777.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048759259541:android:7d5a297353b76fffd4269c",
+        "android_client_info": {
+          "package_name": "earth.hypha.wolapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048759259541-42vk4ioe6e84oddjgfvrnf0kc3po634v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNWN-lwYhA0So6yhJAu5yODL6zB6tAnug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048759259541-42vk4ioe6e84oddjgfvrnf0kc3po634v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1048759259541-a95g92l9e4pof54ajs9v2elr3hhotbea.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "earth.hypha.wolapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048759259541:android:ba3a067e350f89a2d4269c",
+        "android_client_info": {
+          "package_name": "wol.hypha.earth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048759259541-42vk4ioe6e84oddjgfvrnf0kc3po634v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNWN-lwYhA0So6yhJAu5yODL6zB6tAnug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048759259541-42vk4ioe6e84oddjgfvrnf0kc3po634v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1048759259541-a95g92l9e4pof54ajs9v2elr3hhotbea.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "earth.hypha.wolapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
