@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wol/screens/camera_screen.dart';
 import 'package:wol/screens/feed_screen.dart';
 
 main() {
